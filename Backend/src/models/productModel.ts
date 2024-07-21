@@ -14,7 +14,6 @@ const productSchema = new Schema(
     description: {
       type: String,
       required: true,
-      unique: true,
       default: "",
     },
 
@@ -34,6 +33,12 @@ const productSchema = new Schema(
       type: Number,
       required: true,
       default: -1,
+    },
+
+    featured: {
+      type: Boolean,
+      required: true,
+      default: false,
     },
   },
   {

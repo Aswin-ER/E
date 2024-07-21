@@ -4,7 +4,7 @@ import path from "path";
 
 // Set storage engine
 const storage = multer.diskStorage({
-  destination: './uploads/',
+  destination: './upload/',
   filename: function (req, file, cb) {
     cb(null, `${Date.now()}-${file.originalname}`);
   },
@@ -21,7 +21,7 @@ const uploadImage: RequestHandler | any = multer({
 
 // Check file type
 function checkFileType(file:any, cb:any) {
-  const filetypes = /jpeg|jpg|png/;
+  const filetypes = /jpeg|jpg|png|webp/;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = filetypes.test(file.mimetype);
 

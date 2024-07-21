@@ -3,6 +3,7 @@ import Product from "../services/productService";
 import { product } from "../models/types/productModel.types";
 
 const homePageContoller = {
+
   // Add products
   addProduct: async (
     req: Request<{
@@ -10,11 +11,12 @@ const homePageContoller = {
       title: string;
       description: string;
       category: string;
+      featured: boolean;
     }>,
     res: Response<{ data: product | undefined; message: string }>
   ) => {
     try {
-      const { price, title, description, category } = req.body;
+      const { price, title, description, category, featured } = req.body;
 
       const files: any = req.files;
       const image = files.map((file: any) => file.path);
@@ -26,7 +28,8 @@ const homePageContoller = {
         description,
         price,
         image,
-        category
+        category,
+        featured
       );
 
       if (!product) {
@@ -51,6 +54,7 @@ const homePageContoller = {
     }
   },
 
+
   // Edit products
   editProduct: async (
     req: Request<{
@@ -59,11 +63,12 @@ const homePageContoller = {
       description: string;
       category: string;
       id: string;
+      featured: boolean;
     }>,
     res: Response<{ data: product | undefined; message: string }>
   ) => {
     try {
-      const { price, title, description, category, id } = req.body;
+      const { price, title, description, category, id, featured } = req.body;
 
       const files: any = req.files;
       const image = files.map((file: any) => file.path);
@@ -77,7 +82,8 @@ const homePageContoller = {
           price,
           image,
           category,
-          id
+          id,
+          featured
         );
 
       if (!editedProduct) {
@@ -93,7 +99,6 @@ const homePageContoller = {
           message: "Edited Product Successfully...!",
         });
       }
-
     } catch (error) {
       console.log(error);
       res.status(500).json({
@@ -102,6 +107,7 @@ const homePageContoller = {
       });
     }
   },
+
 
   // Get all products
   getProducts: async (
@@ -134,6 +140,7 @@ const homePageContoller = {
       });
     }
   },
+
 
   // Get single product
   getSingleProduct: async (
@@ -169,6 +176,7 @@ const homePageContoller = {
     }
   },
 
+
   removeProduct: async (
     req: Request<{ id: number }>,
     res: Response<{ message: string }>
@@ -198,6 +206,45 @@ const homePageContoller = {
       });
     }
   },
+
+
+  getFeaturedProducts: async (
+    req: Request<{}>,
+    res: Response<{ data: product[] | undefined; message: string }>
+  ) => {
+    try {
+      const productService = new Product();
+
+      const getAllFeaturedProducts =
+        await productService.getAllFeaturedProducts();
+
+      if (!getAllFeaturedProducts) {
+        return res.status(400).json({
+          data: undefined,
+          message: "Failed to Get all Featured products...!",
+        });
+      }
+
+      if (getAllFeaturedProducts.length > 0) {
+        return res.status(200).json({
+          data: getAllFeaturedProducts,
+          message: "Fetched all Featured Products Successfully...!",
+        });
+      }else{
+        return res.status(200).json({
+          data: [],
+          message: "No Featured Products to show...!",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        data: undefined,
+        message: "Internal server Error!",
+      });
+    }
+  },
+  
 };
 
 export default homePageContoller;

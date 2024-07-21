@@ -4,8 +4,9 @@ import dotenv from "dotenv";
 dotenv.config();
 import { connectMongoDB } from "./config/db.config";
 import authRouter from "./routes/authRoute";
-import homePageRouter from "./routes/homePageRoute";
+import productsRouter from "./routes/productsRoute";
 import morgan from "morgan";
+import path from "path";
 
 const app = express();
 
@@ -13,7 +14,7 @@ const app = express();
 app.use(express.json());
 
 // CORS configuration
-const allowedOrigins = ["http://localhost:3001"];
+const allowedOrigins = ["http://localhost:3000"];
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -36,10 +37,13 @@ app.use(morgan('common'));
 connectMongoDB();
 
 app.use("/api", authRouter);
-app.use("/api", homePageRouter);
+app.use("/api", productsRouter);
+
+// Serve static files from the 'upload' directory
+app.use('/upload', express.static(path.join(__dirname, '../upload')))
 
 // Start server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

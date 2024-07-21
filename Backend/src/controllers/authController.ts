@@ -2,13 +2,13 @@
 import { User, UserOutput } from "../models/types/userModel.types";
 import bcrypt from "bcrypt";
 import Auth from "../services/authService";
-import { funJwt, verifyRefershToken } from "../utils/jwtFuc";
+import { funJwt } from "../utils/jwtFuc";
 
 const signUpController = {
   // User Signup
   userSignUp: async (
-    req: Request<{}>,
-    res: Response<{ data: UserOutput | null; message: string }>
+    req: Request<{email:string, password:string, username:string}>,
+    res: Response<{ data: UserOutput | null; message: string}>
   ) => {
     try {
       const { email, username, password } = req.body;
@@ -50,7 +50,7 @@ const signUpController = {
 
   // User Login
   userSignin: async (
-    req: Request<{}>,
+    req: Request<{email: string, password: string}>,
     res: Response<{ data: UserOutput; message: string }>
   ) => {
     try {
@@ -62,7 +62,7 @@ const signUpController = {
 
       if (!userDetails) {
         return res.status(400).json({
-          data: { email: "", username: "", accessToken: "", refershToken: "" },
+          data: { email: "", username: "", accessToken: ""},
           message: "Invalid User Details...!",
         });
       }
@@ -79,7 +79,6 @@ const signUpController = {
               email: "",
               username: "",
               accessToken: "",
-              refershToken: "",
             },
             message: "Invalid User Password...!",
           });
@@ -95,18 +94,11 @@ const signUpController = {
           path: "/",
         });
 
-        res.cookie("refreshToken", tokens?.refresh_token, {
-          httpOnly: true,
-          maxAge: 259200000, // 3days
-          path: "/",
-        });
-
         return res.status(200).json({
           data: {
             email: userDetails?.email,
             username: userDetails?.username,
             accessToken: tokens?.access_token,
-            refershToken: tokens?.refresh_token,
           },
           message: "Signin Successfully...!",
         });
@@ -114,65 +106,7 @@ const signUpController = {
     } catch (error) {
       console.log(error);
       res.status(500).json({
-        data: { email: "", username: "", accessToken: "", refershToken: "" },
-        message: "Internal server Error!",
-      });
-    }
-  },
-
-  //Refersh token
-  refreshToken: async (
-    req: Request<{}>,
-    res: Response<{ message: string; success: boolean; data: {} }>
-  ) => {
-    try {
-      const existingRefershToken = req.cookies?.refreshToken;
-
-      if (!existingRefershToken) {
-        return res.status(400).json({
-          success: false,
-          data: {},
-          message: "Refresh token not found!",
-        });
-      }
-
-      const isValid = await verifyRefershToken(existingRefershToken);
-
-      if (!isValid) {
-        return res.status(401).json({
-          success: false,
-          data: {},
-          message: "Invalid refresh token!",
-        });
-      }
-
-      const { username } = req.body;
-
-      const { tokens } = await funJwt(username);
-
-      //set cookies
-      res.cookie("accessToken", tokens?.access_token, {
-        httpOnly: true,
-        maxAge: 3600000, // 1hrs
-        path: "/",
-      });
-
-      res.cookie("refreshToken", tokens?.refresh_token, {
-        httpOnly: true,
-        maxAge: 259200000, // 3days
-        path: "/",
-      });
-
-      return res.status(200).json({
-        success: true,
-        data: { tokens },
-        message: "Token created Successfully!",
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({
-        success: false,
-        data: {},
+        data: { email: "", username: "", accessToken: ""},
         message: "Internal server Error!",
       });
     }
@@ -185,12 +119,6 @@ const signUpController = {
   ) => {
     try {
       res.clearCookie("accessToken", {
-        path: "/",
-        httpOnly: true,
-        expires: new Date(0),
-      });
-
-      res.clearCookie("refreshToken", {
         path: "/",
         httpOnly: true,
         expires: new Date(0),

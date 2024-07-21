@@ -2,13 +2,13 @@ import productModel from "../models/productModel";
 import { product } from "../models/types/productModel.types";
 
 class Product {
-
   async addProduct(
     title: string,
     description: string,
     price: number,
     image: string[],
-    category: string
+    category: string,
+    featured: boolean
   ): Promise<any> {
     try {
       const addedProduct = await productModel.create({
@@ -17,6 +17,7 @@ class Product {
         category,
         image,
         price,
+        featured,
       });
 
       return addedProduct;
@@ -31,20 +32,18 @@ class Product {
     price: number,
     image: string[],
     category: string,
-    id: string
+    id: string,
+    featured: boolean
   ): Promise<product | undefined> {
     try {
-
       await productModel.findByIdAndUpdate(
         {
           _id: id,
         },
-        { $set: { title, description, category, image, price } }
+        { $set: { title, description, category, image, price, featured } }
       );
 
-      const editedProduct: product | any = await productModel.findById(
-        id
-      );
+      const editedProduct: product | any = await productModel.findById(id);
 
       return editedProduct;
     } catch (error) {
@@ -75,6 +74,18 @@ class Product {
     try {
       await productModel.findByIdAndDelete(id);
       return "Product deleted successfully...!";
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getAllFeaturedProducts(): Promise<product[] | undefined> {
+    try {
+      const allFeaturedProducts: product[] | undefined = await productModel.find({
+        featured: true,
+      });
+
+      return allFeaturedProducts;
     } catch (error) {
       console.log(error);
     }
