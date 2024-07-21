@@ -8,7 +8,7 @@ To run the project locally, follow these steps:
 
    bash
    
-   git clone https://github.com/Aswin-ER/MATCHMAKER-Dating-Website.git
+   git clone https://github.com/Aswin-ER/E-commerce.git
 
 
    
