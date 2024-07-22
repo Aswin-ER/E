@@ -38,6 +38,7 @@ const Signin: FC = () => {
         }
       })
       .catch((error) => {
+        toast.error(error.response.data?.message || "An error occurred");
         console.error("Unexpected error:", error);
       })
       .finally(() => {
