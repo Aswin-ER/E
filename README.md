@@ -40,7 +40,7 @@ To run the project locally, follow these steps:
    ```
 
 
-11. Run Project:
+11. Run the production build:
 
     ```   
     npm start
