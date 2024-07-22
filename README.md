@@ -77,3 +77,24 @@ To run the project locally, follow these steps:
 ### Environment variables (Backend)
 
    Rename .env.example file to .env for all the environment variables required for the Backend.
+
+
+## Add Product(Postman)
+   URL: 
+   ``` 
+   http://localhost:3001/api/addProduct 
+   ```
+   Method: POST
+   Headers:
+
+    Key: authorization
+    Value:<your-access-token> //Give accessToken that get's from response after Successfull Login.
+
+   Body (form-data):
+
+    Key: title, Value: Product Title, Type: Text
+    Key: price, Value: 19.99, Type: Text
+    Key: description, Value: Product Description, Type: Text
+    Key: category, Value: Category Name, Type: Text
+    Key: featured, Value: true, Type: Text
+    Key: image, Value: Select file, Type: File
