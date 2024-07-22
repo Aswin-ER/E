@@ -48,9 +48,9 @@ To run the project locally, follow these steps:
 
 ### Environment variables (Frontend)
 
-   ```
-   Created a .env.example file to list all the environment variables required for the Frontend.
-   ```
+   Rename .env.example file to .env for all the environment variables required for the Frontend.
+
+   
 
 ### Backend (Node.js)
 
@@ -76,6 +76,4 @@ To run the project locally, follow these steps:
 
 ### Environment variables (Backend)
 
-   ```
-   Created a .env.example file to list all the environment variables required for the Backend.
-   ```
+   Rename .env.example file to .env for all the environment variables required for the Backend.
